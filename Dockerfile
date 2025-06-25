@@ -13,7 +13,7 @@ EXPOSE $PORT $ADMIN_PORT
 
 RUN mkdir /app
 
-COPY --from=build /home/gradle/src/build/libs/favorite-countries* /app/favorite-countries.jar
+COPY --from=build /home/gradle/src/build/libs/favorite-countries*.jar /app/favorite-countries.jar
 
 ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=2000", \
 "-XX:+UseStringDeduplication", "-XX:+ParallelRefProcEnabled", "-XX:+HeapDumpOnOutOfMemoryError", \
