@@ -18,3 +18,9 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /swagger-ui
+
+logging:
+  level:
+    feign:
+      client: DEBUG
+    com.josalero.favoritecountry: DEBUG
