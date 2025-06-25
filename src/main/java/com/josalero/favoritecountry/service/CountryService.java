@@ -113,12 +113,12 @@ public class CountryService {
       Iterator<JsonNode> iterator = nodes.iterator();
       while (iterator.hasNext()) {
         JsonNode countryNode = iterator.next();
-        String name = countryNode.get("name").asText();
+        String name = countryNode.get("name").get("common").asText();
 
         if (countryMap.containsKey(name)) {
           Country country = countryMap.get(name);
 
-          countrySet.add(countryRepository.save(buildCountry(country, countryNode)));
+          countrySet.add(countryRepository.save(buildCountryWithNoIndex(country, countryNode)));
         }
       }
     }
@@ -129,13 +129,16 @@ public class CountryService {
 
   private Country buildCountry(Country country, JsonNode response){
     JsonNode innerNode = response.get(0);
-    country.setName(innerNode.get("name").get("common").asText());
+    return buildCountryWithNoIndex(country, innerNode);
+  }
+
+  private Country buildCountryWithNoIndex(Country country, JsonNode response){
+    country.setName(response.get("name").get("common").asText());
     country.setFavorite(true);
-    country.setRegion(innerNode.get("region").asText());
-    country.setPopulation(innerNode.get("population").asLong());
+    country.setRegion(response.get("region").asText());
+    country.setPopulation(response.get("population").asLong());
 
     return country;
   }
-
 }
 
