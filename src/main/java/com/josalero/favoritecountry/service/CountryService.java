@@ -35,7 +35,7 @@ public class CountryService {
   public Country saveCountryAsFavorite(String name) {
     JsonNode response = restCountryFeignClient.getCountryByName(name);
 
-    if (response != null && response.hasNonNull(name)) {
+    if (response != null && response.isArray()) {
       Optional<Country> countryOptional = countryRepository.findByNameEqualsIgnoreCase(name);
       Country country = new Country();
       if (countryOptional.isEmpty()) {
@@ -128,10 +128,11 @@ public class CountryService {
 
 
   private Country buildCountry(Country country, JsonNode response){
-    country.setName(response.get("name").asText());
+    JsonNode innerNode = response.get(0);
+    country.setName(innerNode.get("name").get("common").asText());
     country.setFavorite(true);
-    country.setRegion(response.get("region").asText());
-    country.setPopulation(response.get("population").asLong());
+    country.setRegion(innerNode.get("region").asText());
+    country.setPopulation(innerNode.get("population").asLong());
 
     return country;
   }
